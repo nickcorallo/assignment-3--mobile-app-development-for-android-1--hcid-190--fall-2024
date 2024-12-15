@@ -65,25 +65,29 @@ fun DiamondApp(modifier: Modifier = Modifier) {
 fun generateDiamond(number: Int): String {
     val stringBuilder = StringBuilder()
 
+    // Ensure the number is even
     if (number % 2 == 0) {
+        // Upper part of the diamond
         for (i in 0 until number / 2) {
-            val spaceCount = number / 2 - i
-            val starCount = 2 * i + 1
+            val spaceCount = number / 2 - i - 1
+            val starCount = number - 2 * spaceCount
 
             stringBuilder.append(" ".repeat(spaceCount))
             stringBuilder.append("*".repeat(starCount))
             stringBuilder.append("\n")
         }
 
-        for (i in number / 2 - 1 downTo 0) {
-            val spaceCount = number / 2 - i
-            val starCount = 2 * i + 1
+        // Lower part of the diamond
+        for (i in 0 until number / 2) {
+            val spaceCount = i
+            val starCount = number - 2 * spaceCount
 
             stringBuilder.append(" ".repeat(spaceCount))
             stringBuilder.append("*".repeat(starCount))
             stringBuilder.append("\n")
         }
     } else {
+        // Handle odd numbers if needed (optional)
         for (i in 0 until number / 2 + 1) {
             val spaceCount = number / 2 - i
             val starCount = 2 * i + 1
