@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.diamondprogram.ui.theme.DiamondprogramTheme
 
@@ -50,7 +49,7 @@ fun DiamondApp(modifier: Modifier = Modifier) {
         Button(onClick = {
             val number = input.text.toIntOrNull()
             diamondOutput = if (number != null && number > 0) {
-                generateDiamond(number)
+                diamondGen(number.toString())
             } else {
                 "Please enter a valid positive number."
             }
@@ -61,59 +60,57 @@ fun DiamondApp(modifier: Modifier = Modifier) {
         Text(text = diamondOutput, modifier = Modifier.fillMaxWidth())
     }
 }
+fun diamondGen (input: String): String {
+    val diamond = input.toIntOrNull() ?: return "Invalid input"
+    if (diamond <= 0) return "Please enter a positive number"
 
-fun generateDiamond(number: Int): String {
-    val stringBuilder = StringBuilder()
+    val diamondBuilder = StringBuilder()
+    val evenNum = diamond % 2 == 0
 
-    // Ensure the number is even
-    if (number % 2 == 0) {
-        // Upper part of the diamond
-        for (i in 0 until number / 2) {
-            val spaceCount = number / 2 - i - 1
-            val starCount = number - 2 * spaceCount
+    if (evenNum) {
+        // Top single star
+        val topSpace = (diamond / 2) - 1
+        diamondBuilder.append("  ".repeat(topSpace)).append("  *").appendLine()
 
-            stringBuilder.append(" ".repeat(spaceCount))
-            stringBuilder.append("*".repeat(starCount))
-            stringBuilder.append("\n")
+        // Top half of the diamond
+        for (i in 1..(diamond / 2)) {
+            val spaces = (diamond/ 2) - i
+            val stars = 2 * (i + 1) - 2
+
+            diamondBuilder.append("  ".repeat(spaces))
+            diamondBuilder.append(" *".repeat(stars)).appendLine()
         }
 
-        // Lower part of the diamond
-        for (i in 0 until number / 2) {
-            val spaceCount = i
-            val starCount = number - 2 * spaceCount
+        // Bottom half of the diamond
+        for (i in 0 until (diamond / 2) - 1) {
+            val spaces = i + 1
+            val stars = diamond - 2 * (i + 1)
 
-            stringBuilder.append(" ".repeat(spaceCount))
-            stringBuilder.append("*".repeat(starCount))
-            stringBuilder.append("\n")
+            diamondBuilder.append("  ".repeat(spaces))
+            diamondBuilder.append(" *".repeat(stars)).appendLine()
         }
+
+        // Bottom single star
+        diamondBuilder.append("  ".repeat(topSpace)).append("  *").appendLine()
     } else {
-        // Handle odd numbers if needed (optional)
-        for (i in 0 until number / 2 + 1) {
-            val spaceCount = number / 2 - i
-            val starCount = 2 * i + 1
+        // Top half of the diamond
+        for (i in 0..(diamond / 2)) {
+            val spaces = (diamond / 2) - i
+            val stars = 2 * i + 1
 
-            stringBuilder.append(" ".repeat(spaceCount))
-            stringBuilder.append("*".repeat(starCount))
-            stringBuilder.append("\n")
+            diamondBuilder.append(" ".repeat(spaces))
+            diamondBuilder.append("* ".repeat(stars).trimEnd()).appendLine()
         }
 
-        for (i in 0 until number / 2) {
-            val spaceCount = i + 1
-            val starCount = number - 2 * (i + 1)
+        // Bottom half of the diamond
+        for (i in (diamond / 2) - 1 downTo 0) {
+            val spaces = (diamond / 2) - i
+            val stars = 2 * i + 1
 
-            stringBuilder.append(" ".repeat(spaceCount))
-            stringBuilder.append("*".repeat(starCount))
-            stringBuilder.append("\n")
+            diamondBuilder.append(" ".repeat(spaces))
+            diamondBuilder.append("* ".repeat(stars).trimEnd()).appendLine()
         }
     }
 
-    return stringBuilder.toString()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DiamondAppPreview() {
-    DiamondprogramTheme {
-        DiamondApp()
-    }
+    return diamondBuilder.toString().trimEnd()
 }
